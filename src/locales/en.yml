@@ -1,0 +1,14 @@
+common:
+  extension_name: Vitesse Chrome Extensionbutton
+button:
+  toggle_dark: Toggle dark mode
+  toggle_langs: Change languages
+popup:
+  desc: Build a multi-source, clean and personalized reading environment in one stop
+  open_options: Options
+  to_setting: Please go to the options page to set Key and Token before starting to use the plugin
+
+options:
+  desc: This is the options page
+  sync_storage: Sync Storage Message
+  powered_by_vite: Powered By Vite

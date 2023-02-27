@@ -1,0 +1,21 @@
+{
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "volar.tsPlugin": true,
+  "volar.tsPluginStatus": false,
+  "vite.autoStart": false,
+  "prettier.semi": false, // 取消自动加分号
+  "prettier.singleQuote": true, // 保持单引号，不自动变双引号
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true,
+  },
+  "files.associations": {
+    "*.css": "postcss",
+  },
+  "i18n-ally.localesPaths": [
+    "src/locales"
+  ],
+  "i18n-ally.enabledParsers": [
+    "yaml"
+  ],
+  "i18n-ally.keystyle": "nested"
+}
