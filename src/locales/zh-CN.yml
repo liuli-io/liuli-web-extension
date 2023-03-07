@@ -1,13 +1,15 @@
 common:
   extension_name: Vitesse Chrome Extensionbutton
+  btn-confirm: 确认
 button:
   toggle_dark: 切换深色模式
   toggle_langs: 切换语言
 popup:
   desc: 一站式构建多源、干净、个性化的阅读环境
   open_options: 选项页面
-  to_setting: 请先到选项页面设置 Key、Token ，再开始使用该插件
+  to_setting: 请先到选项页进行 配置 再开始使用该插件
 options:
   desc: 选项页面
-  sync_storage: 同步 Storage 信息
-  powered_by_vite: 由 Vite 强力驱动
+  adminUrl: LiuLi后台 URL 地址
+  token: LiuLi后台 Token
+  default_tag: 默认标签

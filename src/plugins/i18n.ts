@@ -17,11 +17,10 @@ const messages = Object.fromEntries(
 const install = (app: App) => {
   const i18n = createI18n({
     legacy: false,
-    locale: 'en',
+    locale: 'zh-CN',
     globalInjection: true,
     messages,
   })
-
   app.use(i18n)
 }
 

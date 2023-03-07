@@ -10,15 +10,34 @@ html.dark {
 }
 
 .btn {
-  @apply px-4 py-1 rounded inline-block
-    bg-teal-600 text-white cursor-pointer
-    hover:bg-teal-700
-    disabled:cursor-default disabled:bg-gray-600 disabled:opacity-50;
+  @apply px-4 py-2 rounded inline-block
+    bg-red-200 text-white cursor-pointer
+    hover:bg-red-300
+    disabled:cursor-default disabled:bg-gray-700 disabled:opacity-50;
 }
 
 .icon-btn {
   @apply inline-block cursor-pointer select-none
     opacity-75 transition duration-200 ease-in-out
-    hover:opacity-100 hover:text-teal-600;
+    hover:opacity-100 hover:text-red-200;
   font-size: 0.9em;
+}
+
+.inp {
+   @apply w-full max-w-[330px] h-[40px] p-2 rounded-xl outline-none text-[13px];
+  border: 1.5px solid lightgrey;
+  transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1);
+  box-shadow: 0px 0px 20px -18px;
+}
+.inp:hover {
+  border: 1.5px solid lightgrey;
+  box-shadow: 0px 0px 20px -17px;
+}
+
+.inp:active {
+  transform: scale(0.95);
+}
+
+.inp:focus {
+  border: 2px solid grey;
 }

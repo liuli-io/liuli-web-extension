@@ -6,11 +6,11 @@
     <p class="my-2 opacity-50">
       {{ $t('popup.desc') }}
     </p>
-    <!-- 未设置key、Token -->
-    <div v-if="liuLiToken && liuLiKey">
-      <input type="text" />
+    <!-- 已配置 -->
+    <div v-if="liuLiAdminUrl&&liuLiDefaultTags.length&&liuLiToken">
+      {{ `liuLiAdminUrl:${liuLiAdminUrl}----liuLiToken:${liuLiToken}----liuLiDefaultTag----${liuLiDefaultTags}` }}
     </div>
-
+    <!-- 未配置 -->
     <div v-else>
       <p>{{ $t('popup.to_setting') }}</p>
       <button class="btn mt-2" @click="openOptionsPage">
@@ -23,7 +23,7 @@
 </template>
 
 <script setup lang="ts">
-import { liuLiToken, liuLiKey } from '~/logic/storage'
+import { liuLiAdminUrl, liuLiDefaultTags, liuLiToken } from '~/logic/storage'
 
 function openOptionsPage() {
   chrome.runtime.openOptionsPage()

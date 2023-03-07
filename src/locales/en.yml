@@ -1,5 +1,6 @@
 common:
   extension_name: Vitesse Chrome Extensionbutton
+  btn-confirm: confirm
 button:
   toggle_dark: Toggle dark mode
   toggle_langs: Change languages
@@ -7,8 +8,8 @@ popup:
   desc: Build a multi-source, clean and personalized reading environment in one stop
   open_options: Options
   to_setting: Please go to the options page to set Key and Token before starting to use the plugin
-
 options:
   desc: This is the options page
-  sync_storage: Sync Storage Message
-  powered_by_vite: Powered By Vite
+  adminUrl: Liuli后台 URL 地址
+  token: LiuLi后台 Token
+  default_tag: 默认标签

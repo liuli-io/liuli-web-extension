@@ -1,35 +1,64 @@
 <template>
-  <main class="px-4 py-10 text-center text-gray-700 dark:text-gray-200">
+  <main class="h-screen min-h-md flex flex-col justify-center items-center px-4 py-10  text-gray-700 dark:text-gray-200">
     <carbon-settings class="icon-btn mx-2 text-2xl" />
-    <div>Options</div>
     <p class="my-2 opacity-50">
       {{ $t('options.desc') }}
     </p>
-
-    <input
-      id="input"
-      v-model="storageDemo"
-      :placeholder="$t('options.sync_storage')"
-      :aria-label="$t('options.sync_storage')"
-      type="text"
-      autocomplete="false"
-      p="x-4 y-2"
-      w="250px"
-      text="center"
-      bg="transparent"
-      border="~ rounded gray-200 dark:gray-700"
-      outline="none active:none"
-    />
-    <div>沈增宏毕业设计123</div>
+    <div class="w-full flex flex-col items-center my-8 gap-5">
+      <input
+        v-model="formData.adminUrl"
+        :placeholder="$t('options.adminUrl')"
+        :aria-label="$t('options.adminUrl')"
+        type="text"
+        autocomplete="false"
+        class="inp dark:bg-black"
+      />
+      <input
+        v-model="formData.token"
+        :placeholder="$t('options.token')"
+        :aria-label="$t('options.token')"
+        type="text"
+        autocomplete="false"
+        class="inp dark:bg-black"
+      />
+      <input
+        v-model="formData.defaultTags"
+        :placeholder="$t('options.default_tag')"
+        :aria-label="$t('options.default_tag')"
+        type="text"
+        autocomplete="false"
+        class="inp dark:bg-black"
+      />
+      <div>
+        <button class="btn" @click="commitFormData">
+          {{ $t('common.btn-confirm') }}
+        </button>
+        <eos-icons-bubble-loading v-if="showLoadIcon" class="float-right mx-2 text-xl"></eos-icons-bubble-loading>
+      </div>
+    </div>
     <Footer />
-
     <div class="mt-4">
-      {{ $t('options.powered_by_vite') }}
       <pixelarticons-zap class="align-middle" />
     </div>
   </main>
 </template>
 
 <script setup lang="ts">
-import { storageDemo } from '~/logic/storage'
+import { reactive } from 'vue'
+import { liuLiAdminUrl, liuLiDefaultTags, liuLiToken } from '~/logic/storage'
+const showLoadIcon = ref(false)
+const formData = reactive({
+  adminUrl: liuLiAdminUrl.value,
+  token: liuLiToken.value,
+  defaultTags: liuLiDefaultTags.value,
+})
+const commitFormData = () => {
+  showLoadIcon.value = true
+  liuLiAdminUrl.value = formData.adminUrl
+  liuLiDefaultTags.value = formData.defaultTags
+  liuLiToken.value = formData.token
+  setTimeout(() => {
+    showLoadIcon.value = false
+  }, 1000)
+}
 </script>
