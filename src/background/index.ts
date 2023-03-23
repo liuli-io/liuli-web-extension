@@ -1,11 +1,30 @@
 import { sendMessage, onMessage } from 'webext-bridge'
 
+interface IMessageAPI {
+  type: 'API'
+  method: 'GET'|'POST'
+  data: Object
+  url: string
+  headers: Object
+  params: Object
+}
+interface IMessageInfo {
+  type: 'MESSAGE'
+  info: string
+}
+type IMessage =IMessageAPI|IMessageInfo
+
+let previousTabId = 0
+
+const useFetch = async(message: IMessageAPI) => {
+  const res = await (await fetch(message.url)).json()
+  return res
+}
+
 chrome.runtime.onInstalled.addListener((): void => {
   // eslint-disable-next-line no-console
   console.log('Extension installed')
 })
-
-let previousTabId = 0
 
 // communication example: send previous tab title from background page
 // see shim.d.ts for type decleration
@@ -34,6 +53,19 @@ onMessage('get-current-tab', async() => {
   catch {
     return {
       title: undefined,
+    }
+  }
+})
+
+chrome.runtime.onMessage.addListener((message: IMessage, sender, sendResponse) => {
+  switch (message.type) {
+    case 'API': {
+      useFetch(message).then(sendResponse)
+      return true
+    }
+    default: {
+      sendResponse(undefined)
+      break
     }
   }
 })

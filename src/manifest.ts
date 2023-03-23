@@ -33,7 +33,7 @@ export async function getManifest(): Promise<Manifest.WebExtensionManifest> {
       48: './assets/logo.png',
       128: './assets/logo.png',
     },
-    permissions: ['tabs', 'storage', 'activeTab'],
+    permissions: ['tabs', 'storage', 'activeTab', 'notifications'],
     // this is required on dev for Vite script to load
     content_security_policy: {
       extension_pages: IS_DEV
