@@ -1,25 +1,6 @@
 import { sendMessage, onMessage } from 'webext-bridge'
 
-interface IMessageAPI {
-  type: 'API'
-  method: 'GET'|'POST'
-  data: Object
-  url: string
-  headers: Object
-  params: Object
-}
-interface IMessageInfo {
-  type: 'MESSAGE'
-  info: string
-}
-type IMessage =IMessageAPI|IMessageInfo
-
 let previousTabId = 0
-
-const useFetch = async(message: IMessageAPI) => {
-  const res = await (await fetch(message.url)).json()
-  return res
-}
 
 chrome.runtime.onInstalled.addListener((): void => {
   // eslint-disable-next-line no-console
@@ -57,15 +38,7 @@ onMessage('get-current-tab', async() => {
   }
 })
 
-chrome.runtime.onMessage.addListener((message: IMessage, sender, sendResponse) => {
-  switch (message.type) {
-    case 'API': {
-      useFetch(message).then(sendResponse)
-      return true
-    }
-    default: {
-      sendResponse(undefined)
-      break
-    }
-  }
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  sendResponse('rec message')
+  return true
 })

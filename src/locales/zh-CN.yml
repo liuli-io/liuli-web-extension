@@ -1,15 +1,21 @@
 common:
   extension_name: Vitesse Chrome Extensionbutton
   btn-confirm: 确认
+  btn-add: 添加
+  btn-update: 更新
+  open_options: 选项页面
 button:
   toggle_dark: 切换深色模式
   toggle_langs: 切换语言
 popup:
   desc: 一站式构建多源、干净、个性化的阅读环境
-  open_options: 选项页面
   to_setting: 请先到选项页进行 配置 再开始使用该插件
+  url: URL
+  tags: 标签
+  title: 标题
+  detail: 详情
 options:
   desc: 选项页面
-  adminUrl: LiuLi后台 URL 地址
+  adminUrl: LiuLi后台 URL
   token: LiuLi后台 Token
   default_tag: 默认标签

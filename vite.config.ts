@@ -6,6 +6,7 @@ import IconsResolver from 'unplugin-icons/resolver'
 import Components from 'unplugin-vue-components/vite'
 import WindiCSS from 'vite-plugin-windicss'
 import VueI18n from '@intlify/vite-plugin-vue-i18n'
+import ElementPlus from 'unplugin-element-plus/vite'
 import windiConfig from './windi.config'
 
 const port = parseInt(process.env.PORT || '') || 3309
@@ -41,7 +42,7 @@ export default defineConfig(({ command }) => {
     },
     plugins: [
       Vue(),
-
+      ElementPlus(),
       Components({
         dirs: [r('src/components')],
         // auto import icons

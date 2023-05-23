@@ -11,3 +11,7 @@ export const liuLiToken = useLocalStorage('liuli-token', '', {
 export const liuLiDefaultTags = useLocalStorage('liuli-default-tags', [], {
   listenToStorageChanges: true,
 })
+
+export const liuLiConfigIsCompeted = useLocalStorage('liuli-config-is-competed', false, {
+  listenToStorageChanges: true,
+})

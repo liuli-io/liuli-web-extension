@@ -1,67 +1,141 @@
+<!-- eslint-disable vue/max-attributes-per-line -->
+<!-- eslint-disable space-before-function-paren -->
 <template>
-  <main
-    class="w-[300px] px-4 pt-5 pb-4 text-center text-gray-700 dark:text-gray-200"
-  >
-    <img src="/assets/logo.png" class="w-6 icon-btn mx-2 text-2xl" />
-    <p class="my-2 opacity-50">
-      {{ $t('popup.desc') }}
-    </p>
-    <!-- 已配置 -->
-    <div v-if="(liuLiAdminUrl&&liuLiDefaultTags.length&&liuLiToken)" class="mb-16">
+  <main class="w-[300px] px-4 pt-5 pb-1 text-center text-gray-700 dark:text-gray-200">
+    <!-- 顶部 -->
+    <div class="flex justify-between items-center border-b border-light-700">
+      <div class="flex justify-start">
+        <img src="/assets/logo.png" class="w-4 mx-2 text-2xl" />
+        <span class="font-medium">LIULI</span>
+      </div>
       <div>
-        {{ res }}
+        <a class="icon-btn mx-2 text-[1.3em]" rel="noreferrer" href="https://github.com/howie6879/liuli" target="_blank"
+          title="GitHub">
+          <carbon-logo-github />
+        </a>
+        <carbon-settings class="icon-btn mx-2  text-[1.3em]" :title="$t('common.open_options')"
+          @click="openOptionsPage" />
       </div>
-      <div class="my-4 text-left">
-        <span v-for="i in tags" :key="i" class="inline-block px-2 py-1  m-1 rounded-md bg-red-100 text-[#333]">{{ i }}</span>
-      </div>
-      <Select v-model="tags" :get-position="getPosition"></Select>
+    </div>
+    <!-- 已配置且配置成功 -->
+    <div v-if="liuLiConfigIsCompeted" class="mb-2">
+      <input v-model="url" :placeholder="$t('popup.url')" :aria-label="$t('popup.url')" type="text" autocomplete="false"
+        class="inp dark:bg-black my-4" />
+
+      <el-select v-model="tags" multiple :filterable="true" allow-create clearable collapse-tags-tooltip collapse-tags
+        :reserve-keyword="false" :popper-append-to-body="false" :placeholder="$t('popup.tags')"
+        @keyup.enter="onElSelectEnter()">
+        <el-option v-for="item in tagOptions" :key="item" :label="item" :value="item" />
+      </el-select>
+
+      <input v-model="title" :placeholder="$t('popup.title')" :aria-label="$t('popup.title')" type="text"
+        autocomplete="false" class="inp dark:bg-black my-4" />
+
+      <textarea v-model="detail" :placeholder="$t('popup.detail')" :aria-label="$t('popup.detail')" autocomplete="false"
+        class="inp min-h-[60px] max-h-[120px] leading-6 scroll-box dark:bg-black" />
+
       <div class="flex justify-end gap-2 mt-2">
-        <button class="btn mt-2" @click="onClearTags">
-          清空
-        </button>
-        <button class="btn mt-2" @click="onSetDefaultTags">
-          默认
-        </button>
         <button class="btn mt-2" @click="onAddUrl">
-          添加
+          {{ btnType === 'add' ? $t('common.btn-add') : $t('common.btn-update') }}
+          <eos-icons-bubble-loading v-if="showLoadIcon" class="align-text-bottom text-[12px]"></eos-icons-bubble-loading>
+          <ion-checkmark-sharp v-if="showResultIcon && resultIconType"
+            class="align-text-bottom text-[11px]"></ion-checkmark-sharp>
+          <ion-close v-if="showResultIcon && !resultIconType" class="align-text-bottom text-[11px]"></ion-close>
         </button>
       </div>
     </div>
     <!-- 未配置 -->
-    <div v-else>
+    <div v-else class="mt-4 mb-2">
       <p>{{ $t('popup.to_setting') }}</p>
-      <button class="btn mt-2" @click="openOptionsPage">
-        {{ $t('popup.open_options') }}
+      <button class="btn mt-4" @click="openOptionsPage">
+        {{ $t('common.open_options') }}
       </button>
     </div>
-
-    <Footer />
+    <Footer :is-popup="true"></Footer>
   </main>
 </template>
 
 <script setup lang="ts">
-import { liuLiAdminUrl, liuLiDefaultTags, liuLiToken } from '~/logic/storage'
-const tags = ref(['爬虫', '前端资讯'] as string[])
-const getPosition = () => ['IT互联网', '前端资讯', '后端资讯', ' JavaScript', '爬虫', '面经']
-const res = ref('n')
-function openOptionsPage() {
-  chrome.runtime.openOptionsPage()
+import { ElSelect, ElOption } from 'element-plus'
+import { isConfigCompeted } from '~/logic/config'
+import { getCurrentTabInfo, openOptionsPage } from '~/logic/browser'
+import { liuLiDefaultTags, liuLiConfigIsCompeted } from '~/logic/storage'
+import { bmApi } from '~/logic/api'
+
+let res
+
+const btnType = ref('add')
+const showLoadIcon = ref(false)
+const showResultIcon = ref(false)
+const resultIconType = ref(true)
+const tabInfo = ref()
+const url = ref()
+const tags = ref([] as string[])
+const tagOptions = ref([] as string[])
+const detail = ref('')
+const title = ref('')
+
+const onElSelectEnter = () => {
+  // 选择的元素 null为没有选择
+  const elSelectDropdownItemHover = document.querySelector('.el-select-dropdown__item .hover')
+  // 第一个元素 为自己输入的
+  const elSelectDropdownItemFirst = document.querySelector('.el-select-dropdown__item')
+  // 第一个元素为null说明 自己没有输入 tagOptions也为空 直接返回
+  if (elSelectDropdownItemFirst === null) return
+  // 去除span标签
+  const inputValue = elSelectDropdownItemFirst!.innerHTML.slice(6, -7)
+  if (elSelectDropdownItemHover === null && !tagOptions.value.includes(inputValue)) {
+    tags.value.push(inputValue)
+    tagOptions.value.push(inputValue)
+  }
 }
 
-const onClearTags = () => {
-  tags.value = []
+const onAddUrl = async () => {
+  showLoadIcon.value = true
+  res = await bmApi.updateBookmark({ tags: tags.value.length === 0 ? liuLiDefaultTags.value : tags.value, url: url.value, title: title.value, des: detail.value })
+  if (res.status === 200) {
+    resultIconType.value = true
+    // eslint-disable-next-line no-unused-expressions
+    setTimeout(() => {
+      showLoadIcon.value = false
+      showResultIcon.value = true
+    }, 400)
+    setTimeout(() => { showResultIcon.value = false }, 1200)
+  }
+  else {
+    resultIconType.value = false
+    setTimeout(() => {
+      showLoadIcon.value = false
+      showResultIcon.value = true
+    }, 400)
+    setTimeout(() => { showResultIcon.value = false }, 1200)
+  }
 }
 
-const onSetDefaultTags = () => {
-  tags.value = JSON.parse(JSON.stringify(liuLiDefaultTags.value))
-}
+watch(() => url.value, async () => {
+  res = await bmApi.getBookmarkFromUrl({ url: url.value })
+  if (res.status === 200 && res.data.url) {
+    btnType.value = 'update'
+    tags.value = res.data.tags
+    detail.value = res.data.des
+    title.value = res.data.title
+  }
+  else {
+    btnType.value = 'add'
+    tags.value = JSON.parse(JSON.stringify(liuLiDefaultTags.value))
+    detail.value = ''
+    title.value = tabInfo.value.title
+  }
+})
 
-const onAddUrl = async() => {
-  await chrome.tabs.query({ active: true, currentWindow: true }).then((tabs) => {
-    res.value = tabs[0].url!
-  })
-  chrome.runtime.sendMessage({ type: 'API', methods: 'POST', url: 'http://api.txapi.cn/v1/c/love_talk?token=Z1QljZOZiT4NTG', params: {}, headers: {} }, (respond) => {
-    if (respond && respond.code === 200)alert('操作失败，请检查您的网络')
-  })
-}
+onMounted(async () => {
+  await isConfigCompeted()
+  // res = await (await fetch('http://api.txapi.cn/v1/c/love_talk?token=Z1QljZOZiT4NTG')).json()
+  tabInfo.value = await getCurrentTabInfo()
+  url.value = tabInfo.value.url
+  res = await bmApi.getTagList({ tag: '' })
+  tagOptions.value = res.status === 200 ? res.data.map((i: any) => i.tag) : []
+})
 </script>
+
+<style scoped></style>

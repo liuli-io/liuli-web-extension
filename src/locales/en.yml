@@ -1,15 +1,21 @@
 common:
   extension_name: Vitesse Chrome Extensionbutton
-  btn-confirm: confirm
+  btn-confirm: Confirm
+  btn-add: Add
+  btn-update: Update
+  open_options: Options
 button:
   toggle_dark: Toggle dark mode
   toggle_langs: Change languages
 popup:
   desc: Build a multi-source, clean and personalized reading environment in one stop
-  open_options: Options
   to_setting: Please go to the options page to set Key and Token before starting to use the plugin
+  url: URL
+  tags: Tags
+  title: Title
+  detail: Detail
 options:
   desc: This is the options page
-  adminUrl: Liuli后台 URL 地址
+  adminUrl: Liuli Admin URL
   token: LiuLi后台 Token
-  default_tag: 默认标签
+  default_tag: Default Tags
